@@ -35,22 +35,24 @@ Select **android**, **ios**, **macos**, and **web** when prompted.
 3. Choose **Start in test mode** (fine for family use)
 4. Select a region close to you → **Enable**
 
-## 5. Firestore Security Rules (optional but recommended)
+## 5. Firestore Security Rules
 
 In Firebase Console → Firestore → Rules, replace with:
 
 ```
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
-      allow read, write: if true;
+      // app uses anonymous auth
+      allow read, write: if request.auth != null;
     }
   }
 }
 ```
 
-This keeps it open for family use. Since you're not distributing this, it's fine.
+This requires authentication for all reads and writes. The app uses anonymous auth, so users must be signed in to access any data.
 
 ## 6. macOS-specific setup
 
